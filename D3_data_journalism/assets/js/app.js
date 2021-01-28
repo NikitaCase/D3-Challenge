@@ -51,6 +51,29 @@ d3.csv('D3_data_journalism/assets/data/data.csv').then(function(data) {
     chart.append("g")
         .call(y_axis);
 
+    var circles = chart.selectAll("circle")
+        .data(data)
+        .enter()
+        .append("circle")
+        .attr("cx", d => x_scale(d.poverty))
+        .attr("cy", d => y_scale(d.healthcare))
+        .attr("r", "5")
+        .attr("fill", "green")
+        .attr("opacity", ".5");
+
+
+    var tooltip = d3.tip()
+        .attr("class", "d3-tip")
+        .offset([80, -60])
+        .html(function(d) {
+            return (`h ${d.healthcare}`);
+        });
+
+    chart.call(tooltip)
+
+    // circles.
+
+
 
 
 }).catch(function(error) { console.log(error) })
