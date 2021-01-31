@@ -59,6 +59,10 @@
     text-anchor: middle;
 }
 
+.axis_label {
+    font-size: 12px;
+}
+
 
 /* Mobile Rules */
 

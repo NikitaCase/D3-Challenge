@@ -5,8 +5,8 @@ var  svg_height  =  600;
 var margin = {
     top: 40,
     right: 40,
-    bottom: 60,
-    left: 60
+    bottom: 70,
+    left: 70
 };
 
 
@@ -28,7 +28,6 @@ var chosenXaxis = 'healthcare'
 var chosenYaxis = 'poverty'
 
 
-
 function create_scales(data, chosenYaxis, chosenXaxis) {
     var y_scale = d3.scaleLinear(data, chosenYaxis)
         .domain(d3.extent(data, d => d[chosenYaxis]))
@@ -44,19 +43,13 @@ function create_scales(data, chosenYaxis, chosenXaxis) {
 
 
 function update_axes(x_scale, y_scale) {
-var x_axis = d3.axisBottom(x_scale)
-    var new_x = chart.append("g")
-        .attr("transform", `translate(0, ${height})`)
-        .call(x_axis);
 
-        
-        var y_axis = d3.axisBottom(y_scale)
+    var x_axis = d3.axisBottom(x_scale)
 
-    var new_y = chart.append("g")
-        .call(y_axis);
+    var y_axis = d3.axisBottom(y_scale)
 
 
-       return x_axis, y_axis
+    return x_axis, y_axis, new_x, new_y
 }
 
 
@@ -68,24 +61,31 @@ var x_axis = d3.axisBottom(x_scale)
 // obesityLow,obesityHigh,smokes,smokesLow,smokesHigh,-0.385218228
 
 
-d3.csv("data.csv").then(function(data) {
+d3.csv("D3_data_journalism/aseets/data.csv").then(function(data) {
 
 
-    data.forEach(function(row){
+    data.forEach(function(row) {
 
-    // x variables
-    row.age = +row.age
-    row.poverty = +row.poverty
-    row.income = +row.income
+        // x variables
+        row.age = +row.age
+        row.poverty = +row.poverty
+        row.income = +row.income
 
-    // y variables
-    row.healthcare = +row.healthcare
-    row.smokes = +row.smokes
-    row.obestity = +row.obestity
+        // y variables
+        row.healthcare = +row.healthcare
+        row.smokes = +row.smokes
+        row.obesity = +row.obesity
 
     })
 
     var x_scale, y_scale = create_scales(data, chosenXaxis, chosenYaxis)
+
+    var new_y = chart.append("g")
+        .call(y_axis);
+
+    var new_x = chart.append("g")
+        .attr("transform", `translate(0, ${height})`)
+        .call(x_axis);
 
 
     var circles = chart.selectAll("circle")
@@ -97,8 +97,97 @@ d3.csv("data.csv").then(function(data) {
         .attr("r", "10")
         .classed("stateCircle", true)
 
-    var axis_labels = chart.append("g")
-                        .attr("transform", `translate(${width/2})`)
+    var circle_text = chart.selectAll(".circleText")
+        .data(data)
+        .enter()
+        .append("text")
+        .text(d => d.abbr)
+        .attr("x", d => x_scale(d[chosenXaxis]))
+        .attr("y", d => y_scale(d[chosenYaxis]))
+        .style("font-size", "10")
+        .style("text-anchor", "middle")
+        .classed("circleText")
+
+
+    var x_label = chart.append("g")
+        .attr("transform", `translate(${width},${height})`)
+        .classed("axis_label", true)
+
+
+    var label_poverty = x_label.append("text")
+        .attr("x", 0)
+        .attr("y", 20)
+        .attr("value", "poverty")
+        .text("In Poverty (%)")
+        .classed("active", true)
+
+    var label_age = x_label.append("text")
+        .attr("x", 0)
+        .attr("y", 40)
+        .attr("value", "age")
+        .text("Age (Median)")
+        .classed("active", true)
+
+    var label_income = x_label.append("text")
+        .attr("x", 0)
+        .attr("y", 60)
+        .attr("value", "income")
+        .text("Household Income (Median)")
+        .classed("active", true)
+
+
+    var y_label = chart.append("g")
+        .attr("transform", "rotate(-90)")
+        .classed("axis_label", true)
+
+    var label_healthcare = y_label.append("text")
+        .attr("x", 60)
+        .attr("y", 0)
+        .attr("value", "healthcare")
+        .text("Lacks Healthcare (%)")
+        .classed("active", true)
+
+    var label_smokes = y_label.append("text")
+        .attr("x", 40)
+        .attr("y", 0)
+        .attr("value", "smokes")
+        .text("Smokes (%)")
+        .classed("active", true)
+
+    var label_obesity = y_label.append("text")
+        .attr("x", 20)
+        .attr("y", 0)
+        .attr("value", "obesity")
+        .text("Obese (%)")
+        .classed("active", true)
+
+    x_label.selectAll("text").on("click", function() {
+        var value = d3.select(this).attr("value")
+        if (value != chosenXaxis) {
+            chosenXaxis = value
+
+            if (chosenXaxis == "poverty") {
+                label_poverty.classed("active", true).classed("inactive", false)
+                label_age.classed("inactive", true)
+                label_income.classed("inactive", true)
+
+            } else if (chosenXaxis == "age") {
+                label_poverty.classed("inactive", true)
+                label_age.classed("active", true).classed("inactive", false)
+                label_income.classed("inactive", true)
+            } else {
+                label_poverty.classed("active", true).classed("inactive", false)
+                label_age.classed("inactive", true)
+                label_income.classed("inactive", true)
+            }
+
+
+        }
+
+    })
+
+
+
 
 
 })
