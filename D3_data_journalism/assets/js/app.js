@@ -65,8 +65,6 @@ d3.csv('D3_data_journalism/assets/data/data.csv').then(function(data) {
         .attr("cx", d => x_scale(d.poverty))
         .attr("cy", d => y_scale(d.healthcare))
         .attr("r", "10")
-        .attr("fill", "green")
-        .attr("opacity", "0.5")
         .classed("stateCircle", true)
 
     chart.selectAll(".circleText")
