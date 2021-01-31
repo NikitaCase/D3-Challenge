@@ -43,7 +43,19 @@ function create_scales(data, chosenYaxis, chosenXaxis) {
 
 
 
-function new_axes(x_scale, y_scale) {
+function update_axes(x_scale, y_scale) {
+var x_axis = d3.axisBottom(x_scale)
+    var new_x = chart.append("g")
+        .attr("transform", `translate(0, ${height})`)
+        .call(x_axis);
+
+        
+        var y_axis = d3.axisBottom(y_scale)
+
+    var new_y = chart.append("g")
+        .call(y_axis);
+
+
        return x_axis, y_axis
 }
 
@@ -75,16 +87,6 @@ d3.csv("data.csv").then(function(data) {
 
     var x_scale, y_scale = create_scales(data, chosenXaxis, chosenYaxis)
 
-    var x_axis = d3.axisBottom(x_scale)
-    var y_axis = d3.axisBottom(y_scale)
-
-    var new_x = chart.append("g")
-        .attr("transform", `translate(0, ${height})`)
-        .call(x_axis);
-
-
-    var new_y = chart.append("g")
-        .call(y_axis);
 
     var circles = chart.selectAll("circle")
         .data(data)
