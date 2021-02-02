@@ -14,34 +14,33 @@ var svg = d3
     .attr("width", svg_width)
     .attr("height", svg_height)
 
-
 var chart = svg.append("g")
     .attr("transform", `translate(${margin.left}, ${margin.top})`)
 
 
 // Initialize Axes
-var chosenXaxis = 'healthcare'
-var chosenYaxis = 'poverty'
+var chosen_xaxis = 'healthcare'
+var chosen_yaxis = 'poverty'
 
-function createXscale(data, chosenXaxis) {
-    var x_scale = d3.scaleLinear(data, chosenXaxis)
-        .domain(d3.extent(data, d => d[chosenXaxis]))
+// Create scales for axes
+function createXscale(data, chosen_xaxis) {
+    var x_scale = d3.scaleLinear(data, chosen_xaxis)
+        .domain(d3.extent(data, d => d[chosen_xaxis]))
         .range([0, width])
 
     return x_scale
 }
 
-
-function createYscale(data, chosenYaxis) {
-    var y_scale = d3.scaleLinear(data, chosenYaxis)
-        .domain(d3.extent(data, d => d[chosenYaxis]))
+function createYscale(data, chosen_yaxis) {
+    var y_scale = d3.scaleLinear(data, chosen_yaxis)
+        .domain(d3.extent(data, d => d[chosen_yaxis]))
         .range([height, 0])
 
     return y_scale
 }
 
-// Update axes
 
+// Update axes
 function updateXaxis(new_xscale, x_axis) {
     var bottom_axis = d3.axisBottom(new_xscale)
     x_axis.transition()
@@ -61,31 +60,35 @@ function updateYaxis(new_yscale, y_axis) {
 }
 
 
+function updateCircles(circles, new_xscale, new_yscale, chosen_xaxis, chosen_yaxis) {
+    circle_text.transition()
+        .duration(1500)
+        .attr("cx", d => new_xscale(d[chosen_xaxis]))
+        .attr("cy", d => new_yscale(d[chosen_yaxis]))
 
-function updateXaxis(x_scale, y_scale) {
-
-    var x_axis = d3.axisBottom(x_scale)
-
-    var y_axis = d3.axisBottom(y_scale)
-
-
-    return x_axis, y_axis, new_x, new_y
+    return circles
 }
 
+function updateCircleText(circle_text, new_xscale, new_yscale, chosen_xaxis, chosen_yaxis) {
+    circle_text.transition()
+        .duration(1500)
+        .attr("x", d => new_xscale(d[chosen_xaxis]))
+        .attr("y", d => new_yscale(d[chosen_yaxis]))
 
+    return circle_text
+}
 
-
+function updateToolTip() {}
 
 // id,state,abbr,poverty,povertyMoe,age,ageMoe,income,incomeMoe,healthcare,
 // healthcareLow,healthcareHigh,obesity,
 // obesityLow,obesityHigh,smokes,smokesLow,smokesHigh,-0.385218228
 
-
+// Load data from CSV
 d3.csv("D3_data_journalism/aseets/data.csv").then(function(data) {
 
 
     data.forEach(function(row) {
-
         // x variables
         row.age = +row.age
         row.poverty = +row.poverty
@@ -95,11 +98,16 @@ d3.csv("D3_data_journalism/aseets/data.csv").then(function(data) {
         row.healthcare = +row.healthcare
         row.smokes = +row.smokes
         row.obesity = +row.obesity
-
     })
 
-    var x_scale, y_scale = create_scales(data, chosenXaxis, chosenYaxis)
+    // Create new x and y scales
+    var x_scale = createXscale(data, chosen_xaxis)
+    var y_scale = createYscale(data, chosen_yaxis)
 
+    // Create x and y axes
+
+
+    // Append new axes
     var new_y = chart.append("g")
         .call(y_axis);
 
@@ -112,8 +120,8 @@ d3.csv("D3_data_journalism/aseets/data.csv").then(function(data) {
         .data(data)
         .enter()
         .append("circle")
-        .attr("cx", d => x_scale(d[chosenXaxis]))
-        .attr("cy", d => y_scale(d[chosenYaxis]))
+        .attr("cx", d => x_scale(d[chosen_xaxis]))
+        .attr("cy", d => y_scale(d[chosen_yaxis]))
         .attr("r", "10")
         .classed("stateCircle", true)
 
@@ -122,8 +130,8 @@ d3.csv("D3_data_journalism/aseets/data.csv").then(function(data) {
         .enter()
         .append("text")
         .text(d => d.abbr)
-        .attr("x", d => x_scale(d[chosenXaxis]))
-        .attr("y", d => y_scale(d[chosenYaxis]))
+        .attr("x", d => x_scale(d[chosen_xaxis]))
+        .attr("y", d => y_scale(d[chosen_yaxis]))
         .style("font-size", "10")
         .style("text-anchor", "middle")
         .classed("circleText")
@@ -183,27 +191,24 @@ d3.csv("D3_data_journalism/aseets/data.csv").then(function(data) {
 
     x_label.selectAll("text").on("click", function() {
         var value = d3.select(this).attr("value")
-        if (value != chosenXaxis) {
-            chosenXaxis = value
+        if (value != chosen_xaxis) {
+            chosen_xaxis = value
 
-            if (chosenXaxis == "poverty") {
+            if (chosen_xaxis == "poverty") {
                 label_poverty.classed("active", true).classed("inactive", false)
                 label_age.classed("inactive", true)
                 label_income.classed("inactive", true)
 
-            } else if (chosenXaxis == "age") {
+            } else if (chosen_xaxis == "age") {
                 label_poverty.classed("inactive", true)
                 label_age.classed("active", true).classed("inactive", false)
                 label_income.classed("inactive", true)
             } else {
-                label_poverty.classed("active", true).classed("inactive", false)
+                label_poverty.classed("inactive", true)
                 label_age.classed("inactive", true)
-                label_income.classed("inactive", true)
+                label_income.classed("active", true).classed("inactive", false)
             }
-
-
         }
-
     })
 
 
