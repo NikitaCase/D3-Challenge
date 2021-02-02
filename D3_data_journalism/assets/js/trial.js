@@ -1,19 +1,13 @@
+// Setting Parameters for the chart area
 var  svg_width  =  1024;
 var  svg_height  =  600;
 
-
-var margin = {
-    top: 40,
-    right: 40,
-    bottom: 70,
-    left: 70
-};
-
+var margin = { top: 40, right: 40, bottom: 70, left: 70 };
 
 var width = svg_width - margin.left - margin.right;
 var height = svg_height - margin.top - margin.bottom;
 
-
+// Defining the SVG and chart area 
 var svg = d3
     .select("#scatter")
     .append("svg")
@@ -24,25 +18,51 @@ var svg = d3
 var chart = svg.append("g")
     .attr("transform", `translate(${margin.left}, ${margin.top})`)
 
+
+// Initialize Axes
 var chosenXaxis = 'healthcare'
 var chosenYaxis = 'poverty'
 
-
-function create_scales(data, chosenYaxis, chosenXaxis) {
-    var y_scale = d3.scaleLinear(data, chosenYaxis)
-        .domain(d3.extent(data, d => d[chosenYaxis]))
-        .range([height, 0])
-
+function createXscale(data, chosenXaxis) {
     var x_scale = d3.scaleLinear(data, chosenXaxis)
         .domain(d3.extent(data, d => d[chosenXaxis]))
         .range([0, width])
 
-    return y_scale, x_scale
+    return x_scale
+}
+
+
+function createYscale(data, chosenYaxis) {
+    var y_scale = d3.scaleLinear(data, chosenYaxis)
+        .domain(d3.extent(data, d => d[chosenYaxis]))
+        .range([height, 0])
+
+    return y_scale
+}
+
+// Update axes
+
+function updateXaxis(new_xscale, x_axis) {
+    var bottom_axis = d3.axisBottom(new_xscale)
+    x_axis.transition()
+        .duration(1500) // ms 
+        .call(bottom_axis)
+
+    return x_axis
+}
+
+function updateYaxis(new_yscale, y_axis) {
+    var left_axis = d3.axisLeft(new_yscale)
+    x_axis.transition()
+        .duration(1500) // ms 
+        .call(left_axis)
+
+    return y_axis
 }
 
 
 
-function update_axes(x_scale, y_scale) {
+function updateXaxis(x_scale, y_scale) {
 
     var x_axis = d3.axisBottom(x_scale)
 
