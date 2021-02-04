@@ -1,6 +1,6 @@
 # Health Risks
 
-This project explores health risks in different demographics based on 1 yr ACS estimates from the US census bureau 
+This project explores health risks in among American states based on 1 yr ACS estimates from the US census bureau. The bonus.html file contains an interactive d3 graph which will allow you to explore the data set
 
 ### Technology Used
 
@@ -50,6 +50,18 @@ var circles = chart.selectAll("circle")
  The javascript file which powers the interactive graph on the bonus.html file
 
 
+### Demo
+
+These gifs are not my own but are an accurate depiction of how the bonus.html page looks
+
+Interactive Axes
+![Demo of Bonus.html](/D3_data_journalism/assets/images/7-animated-scatter.gif)
+
+Tooltips 
+![Demo of Bonus.html](/D3_data_journalism/assets/images/8-tooltip.gif)
+
+
  ### Screenshots
  
+ Example of the index.html 
  ![Screen of index.html](/D3_data_journalism/assets/images/ss.png)
