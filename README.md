@@ -37,7 +37,19 @@ var circles = chart.selectAll("circle")
  
  ### File Structure 
  
+ - index.html
+ Gives a plot of Healthcare vs Poverty among US States
  
+ - app.js
+ The javascript file which powers the graph on the index.html file
+ 
+ - bonus.html
+ An interactive graph which allows users to explore data by chosing from different x and y axes
+ 
+ - bonus.js 
+ The javascript file which powers the interactive graph on the bonus.html file
+
+
  ### Screenshots
  
- 
+ ![Screen of index.html](/D3_data_journalism/assets/images/ss.png)
