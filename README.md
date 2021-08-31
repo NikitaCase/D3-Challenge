@@ -37,13 +37,13 @@ var circles = chart.selectAll("circle")
  
  ### File Structure 
  
- - index.html
+ - index2.html
  Gives a plot of Healthcare vs Poverty among US States
  
  - app.js
  The javascript file which powers the graph on the index.html file
  
- - bonus.html
+ - [index.html](https://nikitacase.github.io/D3-Challenge/)
  An interactive graph which allows users to explore data by chosing from different x and y axes
  
  - bonus.js 
@@ -52,16 +52,16 @@ var circles = chart.selectAll("circle")
 
 ### Demo
 
-These gifs are not my own but are an accurate depiction of how the bonus.html page looks
+These gifs are not my own but are an accurate depiction of how the page looks
 
 Interactive Axes
-![Demo of Bonus.html](/D3_data_journalism/assets/images/7-animated-scatter.gif)
+![Demo of index.html](/D3_data_journalism/assets/images/7-animated-scatter.gif)
 
 Tooltips 
-![Demo of Bonus.html](/D3_data_journalism/assets/images/8-tooltip.gif)
+![Demo of index.html](/D3_data_journalism/assets/images/8-tooltip.gif)
 
 
  ### Screenshots
  
  Example of the index.html 
- ![Screen of index.html](/D3_data_journalism/assets/images/ss.png)
+ ![Screen of index2.html](/D3_data_journalism/assets/images/ss.png)
